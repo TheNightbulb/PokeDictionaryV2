@@ -9,6 +9,32 @@
 </head>
 <body style="background-color: #0f0f26">
     <img id="bannerImage" alt="PokeDictionary Banner">
+    <div id="filterSelectContainer">
+        <select id="filterSelect">
+            <option value="">No Filter</option>
+            <optgroup label="Type">
+                <option value="normal">Normal</option>
+                <option value="fire">Fire</option>
+                <option value="water">Water</option>
+                <option value="grass">Grass</option>
+                <option value="bug">Bug</option>
+                <option value="flying">Flying</option>
+                <option value="fighting">Fighting</option>
+                <option value="psychic">Psychic</option>
+                <option value="dark">Dark</option>
+                <option value="ghost">Ghost</option>
+                <option value="ice">Ice</option>
+                <option value="rock">Rock</option>
+                <option value="ground">Ground</option>
+                <option value="electric">Electric</option>
+                <option value="dragon">Dragon</option>
+                <option value="steel">Steel</option>
+                <option value="fairy">Fairy</option>
+            </optgroup>
+        </select>
+        <button id="filterButton">Apply Filter</button>
+    </div>
+
     <div id="pokemon-grid-panel">
         <div id="pokemon-grid"></div>
     </div>

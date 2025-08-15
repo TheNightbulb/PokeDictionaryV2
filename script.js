@@ -1,12 +1,14 @@
 var page = 1;
+var PokeList;
 
 //essentially awake function
 document.addEventListener("DOMContentLoaded", () => {
     init();
+    //attach onclick to prev and next page buttons
+    document.getElementById("PrevButton").addEventListener("click", () => { LastPageButton() })
+    document.getElementById("NextButton").addEventListener("click", () => { NextPageButton() })
 })
-//attach onclick to prev and next page buttons
-document.getElementById("PrevButton").addEventListener("click", () => { LastPageButton() })
-document.getElementById("NextButton").addEventListener("click", () => { NextPageButton() })
+
 
 
 
@@ -17,10 +19,10 @@ async function init() {
 
     //fetch list of pokemon from pokeAPI
     const pokelistTemp = await fetch("https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0");
-    const PokeList = await pokelistTemp.json();
+    PokeList = await pokelistTemp.json();
 
-    //make 10 tiles
-    UpdatePage();
+    //load page one
+    await UpdatePage();
     console.log("Init successfull");
 
 }

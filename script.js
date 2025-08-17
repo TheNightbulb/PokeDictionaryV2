@@ -36,7 +36,11 @@ function CapitalizeString(inputString) {
 async function GetPokemonSpriteLink(PokemonLink) {
     const pokemonGet = await fetch(PokemonLink);
     const pokemon = await pokemonGet.json();
-    return pokemon.sprites.front_default;
+    if (pokemon.sprites.front_default != null) {
+        return pokemon.sprites.front_default;
+    } else {
+        return "https://raw.githubusercontent.com/TheNightbulb/PokeDictionaryV2/refs/heads/main/img/SpriteNotFound.png"
+    }
 }
 async function UpdatePokeList(filter) {
     // Map of type names to their corresponding API number
@@ -90,7 +94,9 @@ async function UpdatePage() {
         container.appendChild(tile);
 
         let img = document.createElement("img");
+       
         img.src = await GetPokemonSpriteLink(PokeList.results[i].url);
+      
         tile.addEventListener("click", () => { openPokemonPage(PokeList.results[i].name) });
         img.width = 100;
         img.height = 100;

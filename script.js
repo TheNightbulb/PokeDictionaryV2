@@ -5,10 +5,12 @@ var PokeList;
 document.addEventListener("DOMContentLoaded", () => {
     init();
     //attach onclick to prev and next page buttons
-    document.getElementById("PrevButton").addEventListener("click", () => { LastPageButton() })
-    document.getElementById("NextButton").addEventListener("click", () => { NextPageButton() })
+    document.getElementById("PrevButton").addEventListener("click", () => { LastPageButton() });
+    document.getElementById("NextButton").addEventListener("click", () => { NextPageButton() });
     //attach onclick to filter button
-    document.getElementById("filterButton").addEventListener("click", () => { ApplyFilterButton() })
+    document.getElementById("filterButton").addEventListener("click", () => { ApplyFilterButton() });
+    //the page select button
+    document.getElementById("PageSelectButton").addEventListener("click", () => { PageSelectButton() });
 })
 
 
@@ -77,7 +79,7 @@ async function UpdatePage() {
     document.getElementById("PageNumber").textContent = page;
     let container = document.getElementById("pokemon-grid");
     container.innerHTML = "";
-    for (let i = 108 * (page - 1); i < 108 * page; i++) {
+    for (let i = 50 * (page - 1); i < 50 * page; i++) {
 
         let tile = document.createElement("div");
 
@@ -89,6 +91,7 @@ async function UpdatePage() {
 
         let img = document.createElement("img");
         img.src = await GetPokemonSpriteLink(PokeList.results[i].url);
+        tile.addEventListener("click", () => { openPokemonPage(PokeList.results[i].name) });
         img.width = 100;
         img.height = 100;
         tile.appendChild(img);
@@ -97,7 +100,7 @@ async function UpdatePage() {
 
 
 function NextPageButton() {
-    if (PokeList.results[page * 108]) {
+    if (PokeList.results[page * 50]) {
         page++;
         UpdatePage();
     }
@@ -109,7 +112,7 @@ function LastPageButton() {
         page--;
         UpdatePage();
     }
-
+    
     console.log("Went to previous page: " + page);
 }
 async function ApplyFilterButton() {
@@ -119,4 +122,19 @@ async function ApplyFilterButton() {
     
     page = 1;
     UpdatePage();
+}
+function PageSelectButton() {
+    var input = parseInt(document.getElementById("PageInput").value);
+    if (input < 1) {
+        page = 1;
+    } else if (input > Math.ceil(PokeList.results.length / 50)) {
+        page = Math.ceil(PokeList.results.length / 50);
+    } else {
+        page = input;
+    }
+    UpdatePage();
+}
+
+function openPokemonPage(name) {
+    window.location.href = `pokemon.html?id=${name}`;
 }

@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
 })
 
 async function init() {
+    document.getElementById("bannerImage").src = "https://raw.githubusercontent.com/TheNightbulb/PokeDictionaryV2/refs/heads/main/img/PokeDictionary%20Logo.png";
     console.log(PokemonName);
     //get pokemon data
     try {
@@ -27,9 +28,17 @@ async function init() {
     console.log(PokemonSpiecies);
     //set pokemon sprite
     document.getElementById("PokemonPortrait").src = await GetArtworkURLForPokemon("official");
+    document.getElementById("PokemonName").innerText = CapitalizeString(PokemonName);
+    document.getElementById("PokemonGenus").innerText = getEnglishEntries(PokemonSpiecies.genera, "genus")[0];
 }
-
-
+function getEnglishEntries(entries, fieldName) {
+    return entries
+        .filter(entry => entry.language.name === "en")
+        .map(entry => entry[fieldName]);
+}
+function CapitalizeString(inputString) {
+    return inputString.charAt(0).toUpperCase() + inputString.slice(1);
+}
 async function RetryImage() {
     if (imageRetried == false) {
         document.getElementById("PokemonPortrait").src = await GetArtworkURLForPokemon("sprite");

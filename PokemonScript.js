@@ -10,6 +10,9 @@ document.addEventListener("DOMContentLoaded", () => {
         RetryImage();
         imageRetried = true;
     });
+    document.getElementById("bannerImage").addEventListener("click", () => {
+        window.location.href = "index.html";
+    })
 })
 
 async function init() {

@@ -52,6 +52,16 @@ async function init() {
     //set the pokedex number
     document.getElementById("PokedexNum").innerText = "National #: " + GetNationalPokedexNumber();
     //AbilityPanel
+    var abilityPanel = document.getElementById("AbilityPanel");
+    for (let index = 0; index < Pokemon.abilities.length; index++) {
+        var span = document.createElement("span");
+        span.innerText = (index + 1) + ": " + Pokemon.abilities[index].ability.name;
+        if (Pokemon.abilities[index].is_hidden) {
+            span.innerText += " (Hidden)"
+        }
+        span.className = "AbilityText";
+        abilityPanel.appendChild(span);
+    }
 }
 function getEnglishEntries(entries, fieldName) {
     return entries

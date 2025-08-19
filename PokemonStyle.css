@@ -46,6 +46,19 @@
     display: flex;
     margin:0px 0px 2px 0px;
 }
+.AbilityPanel {
+    background-color: #2c2c63;
+    border: 2px solid #39398f;
+    text-align: left;
+    color: white;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+    border-radius: 10px;
+    flex-direction: column;
+    display: flex;
+    width: 60%;
+    padding: 2px;
+}
 #HeightMetricPanel{
     width: 60%;
 }
@@ -74,6 +87,13 @@
     font-size: 20px;
     font-weight: bold;
     text-align: center;
+    color: white;
+    width: auto;
+}
+.abilityText {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: left;
     color: white;
     width: auto;
 }

@@ -1,12 +1,33 @@
-#Panel {
+#PanelContainer {
+    display: flex;
+    flex-direction: row; 
+    justify-content: space-around; 
+    align-items: flex-start;
+    flex-wrap: wrap; 
+}
+#VirticalStacker {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+#horizontalStacker {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+.TypeImage {
+    width: 48%;
+}
+.Panel {
     border: 1px solid;
     border-radius: 30px;
     padding: 20px;
-    margin: 20px;
     background-color: #20204a;
     width: 30%;
+    align-items: center;
+    text-align:center;
 }
-#InnerPanel {
+.InnerPanel {
     background-color: #2c2c63;
     border: 2px solid #39398f;
     text-align: center;
@@ -19,6 +40,9 @@
     display: flex;
 
 }
+#MetricPanel{
+    width: 60%;
+}
 #bannerImage {
     width: 100%;
     height: auto;
@@ -29,4 +53,22 @@
     text-align: center;
     color: white;
     width: auto;
+}
+.TitleText {
+    font-size: 30px;
+    font-weight: bold;
+    text-align: center;
+    color: white;
+    width: auto;
+}
+.text {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    color: white;
+    width: auto;
+}
+#PokemonPortrait {
+    width: 100%;
+    margin: 0 auto;
 }

@@ -30,6 +30,19 @@ async function init() {
     document.getElementById("PokemonPortrait").src = await GetArtworkURLForPokemon("official");
     document.getElementById("PokemonName").innerText = CapitalizeString(PokemonName);
     document.getElementById("PokemonGenus").innerText = getEnglishEntries(PokemonSpiecies.genera, "genus")[0];
+    //pokedex info
+    var typeText;
+    if (Pokemon.types.length == 1) {
+        typeText = "Type"
+    } else {typeText = "Types" }
+    document.getElementById("typeText").innerText = typeText;
+    //set type sprites
+    document.getElementById("TypeImg1").src = await GetTypeSprites(Pokemon.types[0].type.name)
+    if (Pokemon.types.length == 2) {
+        document.getElementById("TypeImg2").src = await GetTypeSprites(Pokemon.types[1].type.name)
+    } else {
+        document.getElementById("TypeImg2").remove();
+    }
 }
 function getEnglishEntries(entries, fieldName) {
     return entries
@@ -62,4 +75,9 @@ async function GetArtworkURLForPokemon(version) {
     } catch {
         return Pokemon.sprites.front_default
     }
+}
+async function GetTypeSprites(name) {
+    var TypeData = await fetch(`https://pokeapi.co/api/v2/type/${name}`);
+    var type = await TypeData.json();
+    return "https://raw.githubusercontent.com/TheNightbulb/PokeDictionaryV2/refs/heads/main/img/Types/" + type.id+".png"
 }

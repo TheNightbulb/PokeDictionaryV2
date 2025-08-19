@@ -16,7 +16,6 @@ document.addEventListener("DOMContentLoaded", () => {
 })
 
 async function init() {
-    document.getElementById("bannerImage").src = "https://raw.githubusercontent.com/TheNightbulb/PokeDictionaryV2/refs/heads/main/img/PokeDictionary%20Logo.png";
     console.log(PokemonName);
     //get pokemon data
     try {
@@ -55,11 +54,16 @@ async function init() {
     var abilityPanel = document.getElementById("AbilityPanel");
     for (let index = 0; index < Pokemon.abilities.length; index++) {
         var span = document.createElement("span");
-        span.innerText = (index + 1) + ": " + Pokemon.abilities[index].ability.name;
+        span.innerText = (index + 1) + ": " + CapitalizeString(Pokemon.abilities[index].ability.name);
         if (Pokemon.abilities[index].is_hidden) {
-            span.innerText += " (Hidden)"
+            span.innerText += " (Hidden)";
         }
         span.className = "AbilityText";
+        span.style.cursor = "pointer";
+        span.addEventListener("click", () => {
+            window.location.href = `ability.html?id=${Pokemon.abilities[index].ability.name}`;
+
+        });
         abilityPanel.appendChild(span);
     }
 }

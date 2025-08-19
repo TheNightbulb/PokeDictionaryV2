@@ -30,7 +30,12 @@ async function init() {
 
 }
 function CapitalizeString(inputString) {
-    return inputString.charAt(0).toUpperCase() + inputString.slice(1);
+    let stringWithSpaces = inputString.replace(/-/g, ' ');
+
+    return stringWithSpaces
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
 }
 
 async function GetPokemonSpriteLink(PokemonLink) {

@@ -41,8 +41,14 @@ async function init() {
     if (Pokemon.types.length == 2) {
         document.getElementById("TypeImg2").src = await GetTypeSprites(Pokemon.types[1].type.name)
     } else {
-        document.getElementById("TypeImg2").remove();
+        document.getElementById("TypeParent").removeChild(document.getElementById("TypeImg2"));
     }
+    //set the weight and height
+    document.getElementById("HeightMetricPanel").innerText = convertHeight(Pokemon.height, "M") + " ("+ convertHeight(Pokemon.height, "F") + ")"
+    document.getElementById("WeightMetricPanel").innerText = convertWeight(Pokemon.weight, "K") + " (" + convertWeight(Pokemon.weight, "L") + ")"
+    //set the pokedex number
+    document.getElementById("PokedexNum").innerText = "National #: " + GetNationalPokedexNumber();
+    //AbilityPanel
 }
 function getEnglishEntries(entries, fieldName) {
     return entries
@@ -50,7 +56,12 @@ function getEnglishEntries(entries, fieldName) {
         .map(entry => entry[fieldName]);
 }
 function CapitalizeString(inputString) {
-    return inputString.charAt(0).toUpperCase() + inputString.slice(1);
+    let stringWithSpaces = inputString.replace(/-/g, ' ');
+
+    return stringWithSpaces
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
 }
 async function RetryImage() {
     if (imageRetried == false) {
@@ -80,4 +91,58 @@ async function GetTypeSprites(name) {
     var TypeData = await fetch(`https://pokeapi.co/api/v2/type/${name}`);
     var type = await TypeData.json();
     return "https://raw.githubusercontent.com/TheNightbulb/PokeDictionaryV2/refs/heads/main/img/Types/" + type.id+".png"
+}
+function convertHeight(dm, unit) {
+    if (typeof dm !== "number" || isNaN(dm)) {
+        throw new Error("First argument must be a number (decimeters).");
+    }
+    if (typeof unit !== "string") {
+        throw new Error("Second argument must be a string: 'M' or 'F'.");
+    }
+
+    const meters = dm / 10; 
+
+    if (unit.toUpperCase() === "M") {
+        return `${meters.toFixed(1)} m`; 
+    }
+
+    if (unit.toUpperCase() === "F") {
+        const totalInches = meters * 39.3701; 
+        const feet = Math.floor(totalInches / 12);
+        const inches = totalInches % 12;
+        return `${feet}'${inches.toFixed(0)}"`; 
+    }
+
+    throw new Error("Invalid unit. Use 'M' for meters or 'F' for feet/inches.");
+}
+function convertWeight(hg, unit) {
+    if (typeof hg !== "number" || isNaN(hg)) {
+        throw new Error("First argument must be a number (hectograms).");
+    }
+    if (typeof unit !== "string") {
+        throw new Error("Second argument must be a string: 'K' or 'L'.");
+    }
+
+    const kilograms = hg / 10; 
+
+    if (unit.toUpperCase() === "K") {
+        return `${kilograms.toFixed(1)} kg`; 
+    }
+
+    if (unit.toUpperCase() === "L") {
+        const pounds = kilograms * 2.20462; 
+        return `${pounds.toFixed(1)} lb`; 
+    }
+
+    throw new Error("Invalid unit. Use 'K' for kilograms or 'L' for pounds.");
+}
+
+function GetNationalPokedexNumber() {
+    if (!PokemonSpiecies.pokedex_numbers) return null;
+
+    const national = PokemonSpiecies.pokedex_numbers.find(
+        entry => entry.pokedex.name === "national"
+    );
+
+    return national ? national.entry_number : null;
 }

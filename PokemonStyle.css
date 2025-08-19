@@ -3,20 +3,26 @@
     flex-direction: row; 
     justify-content: space-around; 
     align-items: flex-start;
-    flex-wrap: wrap; 
+    flex-wrap: wrap;
+    
 }
 #VirticalStacker {
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
 }
-#horizontalStacker {
+
+.HorizontalStacker {
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    flex: 1;
 }
 .TypeImage {
     width: 48%;
+    height:auto;
+    padding:2px;
 }
 .Panel {
     border: 1px solid;
@@ -38,9 +44,12 @@
     flex-direction: column;
     align-items: center;
     display: flex;
-
+    margin:0px 0px 2px 0px;
 }
-#MetricPanel{
+#HeightMetricPanel{
+    width: 60%;
+}
+#WeightMetricPanel {
     width: 60%;
 }
 #bannerImage {

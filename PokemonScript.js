@@ -39,7 +39,7 @@ async function init() {
     var typeText;
     if (Pokemon.types.length == 1) {
         typeText = "Type"
-    } else {typeText = "Types" }
+    } else { typeText = "Types" }
     document.getElementById("typeText").innerText = typeText;
     //set type sprites
     document.getElementById("TypeImg1").src = await GetTypeSprites(Pokemon.types[0].type.name)
@@ -49,7 +49,7 @@ async function init() {
         document.getElementById("TypeParent").removeChild(document.getElementById("TypeImg2"));
     }
     //set the weight and height
-    document.getElementById("HeightMetricPanel").innerText = convertHeight(Pokemon.height, "M") + " ("+ convertHeight(Pokemon.height, "F") + ")"
+    document.getElementById("HeightMetricPanel").innerText = convertHeight(Pokemon.height, "M") + " (" + convertHeight(Pokemon.height, "F") + ")"
     document.getElementById("WeightMetricPanel").innerText = convertWeight(Pokemon.weight, "K") + " (" + convertWeight(Pokemon.weight, "L") + ")"
     //set the pokedex number
     document.getElementById("PokedexNum").innerText = "National #: " + GetNationalPokedexNumber();
@@ -132,7 +132,7 @@ async function init() {
                     break;
                 case "white": panel.style.backgroundColor = "white"; panel.style.color = "black";
                     break;
-                case "black-2": panel.style.backgroundColor = "black"; 
+                case "black-2": panel.style.backgroundColor = "black";
                     break;
                 case "white-2": panel.style.backgroundColor = "white"; panel.style.color = "black";
                     break;
@@ -152,7 +152,7 @@ async function init() {
                     break;
                 case "ultra-moon": panel.style.backgroundColor = "darkblue";
                     break;
-                case "lets-go-pikachu": panel.style.backgroundColor = "yellow"; panel.style.color = "black"; 
+                case "lets-go-pikachu": panel.style.backgroundColor = "yellow"; panel.style.color = "black";
                     break;
                 case "lets-go-eevee": panel.style.backgroundColor = "saddlebrown"; panel.style.color = "black";
                     break;
@@ -194,8 +194,7 @@ async function init() {
     setStatBar("spec-defense-bar", Pokemon.stats[4].base_stat);
     setStatBar("speed-bar", Pokemon.stats[5].base_stat);
     var total = 0;
-    for (let index = 0; index < Pokemon.stats.length; index++)
-    {
+    for (let index = 0; index < Pokemon.stats.length; index++) {
         total += Pokemon.stats[index].base_stat;
     }
     document.getElementById("statTotal").innerText = "Total: " + total;
@@ -222,9 +221,22 @@ async function init() {
     //set egg groups
     var eggText = document.getElementById("EggGroupText");
     for (let index = 0; index < PokemonSpiecies.egg_groups.length; index++) {
-        eggText.innerText += (" "+FormatString(PokemonSpiecies.egg_groups[index].name)+",");
+        eggText.innerText += (" " + FormatString(PokemonSpiecies.egg_groups[index].name) + ",");
     }
     eggText.innerText = eggText.innerText.slice(0, -1);
+    //set growth rate
+    var growthRateText = document.getElementById("GrowthRateText");
+    growthRateText.innerText = FormatString(PokemonSpiecies.growth_rate.name);
+
+    //set egg cycles
+    var eggCyclesText = document.getElementById("EggCycleText");
+    eggCyclesText.innerText = PokemonSpiecies.hatch_counter + " (" + (128 * (PokemonSpiecies.hatch_counter + 1) + " - " + (256 * (PokemonSpiecies.hatch_counter + 1)) + " Steps)");
+    //set catch rate
+    var catchRateText = document.getElementById("CatchRateText");
+    catchRateText.innerText = PokemonSpiecies.capture_rate + " (1/" + Math.ceil(255 / PokemonSpiecies.capture_rate) + " chance to catch)" + " %" + ((PokemonSpiecies.capture_rate / 255) * 100).toFixed(2);
+    //set base friendship
+    var baseFriendshipText = document.getElementById("BaseFriendshipText");
+    baseFriendshipText.innerText = PokemonSpiecies.base_happiness;
 }
 function setStatBar(barId, value, max = 255) {
     const bar = document.getElementById(barId);

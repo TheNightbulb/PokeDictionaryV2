@@ -30,7 +30,7 @@ async function init() {
     console.log(PokemonSpiecies);
     //set pokemon sprite
     document.getElementById("PokemonPortrait").src = await GetArtworkURLForPokemon("official");
-    document.getElementById("PokemonName").innerText = CapitalizeString(PokemonName);
+    document.getElementById("PokemonName").innerText = FormatString(PokemonName);
     document.getElementById("PokemonGenus").innerText = getEnglishEntries(PokemonSpiecies.genera, "genus")[0];
     //pokedex info
     var typeText;
@@ -54,31 +54,46 @@ async function init() {
     var abilityPanel = document.getElementById("AbilityPanel");
     for (let index = 0; index < Pokemon.abilities.length; index++) {
         var span = document.createElement("span");
-        span.innerText = (index + 1) + ": " + CapitalizeString(Pokemon.abilities[index].ability.name);
+        span.innerText = (index + 1) + ": " + FormatString(Pokemon.abilities[index].ability.name);
         if (Pokemon.abilities[index].is_hidden) {
             span.innerText += " (Hidden)";
         }
         span.className = "AbilityText";
         span.style.cursor = "pointer";
+        span.style.textDecoration = "underline";
         span.addEventListener("click", () => {
             window.location.href = `ability.html?id=${Pokemon.abilities[index].ability.name}`;
 
         });
         abilityPanel.appendChild(span);
+
     }
+    //add pokedex numbers
+    for (let index = 1; index < PokemonSpiecies.pokedex_numbers.length; index++) {
+        var span = document.createElement("span");
+        span.className = "AbilityText";
+        span.innerText = PokemonSpiecies.pokedex_numbers[index].entry_number + " (" + FormatString(PokemonSpiecies.pokedex_numbers[index].pokedex.name) + ")";
+        document.getElementById("PokedexNumbersPanel").appendChild(span);
+
+    }
+    document.getElementById("PokemonGeneration").innerText = CapitalizeString(PokemonSpiecies.generation.name);
 }
 function getEnglishEntries(entries, fieldName) {
     return entries
         .filter(entry => entry.language.name === "en")
         .map(entry => entry[fieldName]);
 }
-function CapitalizeString(inputString) {
+function FormatString(inputString) {
     let stringWithSpaces = inputString.replace(/-/g, ' ');
 
     return stringWithSpaces
         .split(' ')
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ');
+}
+function CapitalizeString(str) {
+    if (!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
 async function RetryImage() {
     if (imageRetried == false) {

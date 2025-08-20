@@ -29,7 +29,7 @@ async function init() {
     console.log("Init successfull");
 
 }
-function CapitalizeString(inputString) {
+function FormatString(inputString) {
     let stringWithSpaces = inputString.replace(/-/g, ' ');
 
     return stringWithSpaces
@@ -95,7 +95,7 @@ async function UpdatePage() {
 
         tile.classList.add("pokemon-tile"); // for styling
         //set pokemon name
-        tile.textContent = CapitalizeString(PokeList.results[i].name);
+        tile.textContent = FormatString(PokeList.results[i].name);
         container.appendChild(tile);
 
         let img = document.createElement("img");

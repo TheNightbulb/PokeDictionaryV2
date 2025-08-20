@@ -77,6 +77,131 @@ async function init() {
 
     }
     document.getElementById("PokemonGeneration").innerText = CapitalizeString(PokemonSpiecies.generation.name);
+    //set up pokedex entries
+    for (let index = 0; index < PokemonSpiecies.flavor_text_entries.length; index++) {
+        if (PokemonSpiecies.flavor_text_entries[index].language.name == "en") {
+            let panel = document.createElement("div");
+            panel.className = "InnerPanel";
+            let GameTitleText = document.createElement("span");
+            GameTitleText.className = "text";
+            GameTitleText.innerText = FormatString(PokemonSpiecies.flavor_text_entries[index].version.name);
+            panel.appendChild(GameTitleText);
+            let PokedexEntryText = document.createElement("span");
+            PokedexEntryText.className = "text";
+            PokedexEntryText.innerText = FormatString(PokemonSpiecies.flavor_text_entries[index].flavor_text);
+            panel.appendChild(PokedexEntryText);
+            document.getElementById("PokedexEntryPanel").appendChild(panel);
+            //set the background color of the panel based on the game version
+            switch (PokemonSpiecies.flavor_text_entries[index].version.name) {
+                case "red": panel.style.backgroundColor = "red";
+                    break;
+                case "blue": panel.style.backgroundColor = "blue";
+                    break;
+                case "yellow": panel.style.backgroundColor = "yellow"; panel.style.color = "black";
+                    break;
+                case "gold": panel.style.backgroundColor = "gold"; panel.style.color = "black";
+                    break;
+                case "silver": panel.style.backgroundColor = "silver"; panel.style.color = "black";
+                    break;
+                case "crystal": panel.style.backgroundColor = "deepskyblue"; panel.style.color = "black";
+                    break;
+                case "ruby": panel.style.backgroundColor = "darkred";
+                    break;
+                case "sapphire": panel.style.backgroundColor = "darkblue";
+                    break;
+                case "emerald": panel.style.backgroundColor = "green";
+                    break;
+                case "firered": panel.style.backgroundColor = "orangered";
+                    break;
+                case "leafgreen": panel.style.backgroundColor = "darkgreen";
+                    break;
+                case "diamond": panel.style.backgroundColor = "lightblue"; panel.style.color = "black";
+                    break;
+                case "pearl": panel.style.backgroundColor = "pink"; panel.style.color = "black";
+                    break;
+                case "platinum": panel.style.backgroundColor = "lightgray"; panel.style.color = "black";
+                    break;
+                case "heartgold": panel.style.backgroundColor = "goldenrod"; panel.style.color = "black";
+                    break;
+                case "soulsilver": panel.style.backgroundColor = "darkgray"; panel.style.color = "black";
+                    break;
+                case "black": panel.style.backgroundColor = "black";
+                    break;
+                case "white": panel.style.backgroundColor = "white"; panel.style.color = "black";
+                    break;
+                case "black-2": panel.style.backgroundColor = "black"; 
+                    break;
+                case "white-2": panel.style.backgroundColor = "white"; panel.style.color = "black";
+                    break;
+                case "x": panel.style.backgroundColor = "navy";
+                    break;
+                case "y": panel.style.backgroundColor = "darkred";
+                    break;
+                case "omega-ruby": panel.style.backgroundColor = "darkred";
+                    break;
+                case "alpha-sapphire": panel.style.backgroundColor = "darkblue";
+                    break;
+                case "sun": panel.style.backgroundColor = "orange"; panel.style.color = "black";
+                    break;
+                case "moon": panel.style.backgroundColor = "darkblue";
+                    break;
+                case "ultra-sun": panel.style.backgroundColor = "orange"; panel.style.color = "black";
+                    break;
+                case "ultra-moon": panel.style.backgroundColor = "darkblue";
+                    break;
+                case "lets-go-pikachu": panel.style.backgroundColor = "yellow"; panel.style.color = "black"; 
+                    break;
+                case "lets-go-eevee": panel.style.backgroundColor = "saddlebrown"; panel.style.color = "black";
+                    break;
+                case "sword": panel.style.backgroundColor = "lightgray"; panel.style.color = "black";
+                    break;
+                case "shield": panel.style.backgroundColor = "darkgreen";
+                    break;
+                case "legends-arceus": panel.style.backgroundColor = "brown"; panel.style.color = "black";
+                    break;
+                case "scarlet": panel.style.backgroundColor = "red";
+                    break;
+                case "violet": panel.style.backgroundColor = "blue";
+                    break;
+                case "colosseum": panel.style.backgroundColor = "purple";
+                    break;
+                case "xd": panel.style.backgroundColor = "purple";
+                    break;
+                case "brilliant-diamond": panel.style.backgroundColor = "lightblue"; panel.style.color = "black";
+                    break;
+                case "shining-pearl": panel.style.backgroundColor = "pink"; panel.style.color = "black";
+                    break;
+                case "the-isle-of-armor": panel.style.backgroundColor = "lightgreen"; panel.style.color = "black";
+                    break;
+                case "the-crown-tundra": panel.style.backgroundColor = "lightgray"; panel.style.color = "black";
+                    break;
+                case "the-teal-mask": panel.style.backgroundColor = "teal"; panel.style.color = "black";
+                    break;
+                case "the-indigo-disk": panel.style.backgroundColor = "indigo"; panel.style.color = "black";
+                    break;
+
+            }
+
+        }
+    }
+    setStatBar("hp-bar", Pokemon.stats[0].base_stat);
+    setStatBar("attack-bar", Pokemon.stats[1].base_stat);
+    setStatBar("defense-bar", Pokemon.stats[2].base_stat);
+    setStatBar("spec-attack-bar", Pokemon.stats[3].base_stat);
+    setStatBar("spec-defense-bar", Pokemon.stats[4].base_stat);
+    setStatBar("speed-bar", Pokemon.stats[5].base_stat);
+    var total = 0;
+    for (let index = 0; index < Pokemon.stats.length; index++)
+    {
+        total += Pokemon.stats[index].base_stat;
+    }
+    document.getElementById("statTotal").innerText = "Total: " + total;
+}
+function setStatBar(barId, value, max = 255) {
+    const bar = document.getElementById(barId);
+    const percentage = Math.min((value / max) * 100, 100);
+    bar.style.width = percentage + "%";
+    bar.textContent = value; // show the stat value inside the bar
 }
 function getEnglishEntries(entries, fieldName) {
     return entries

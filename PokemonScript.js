@@ -3,6 +3,9 @@ const PokemonName = url.searchParams.get("id");
 var PokemonSpiecies;
 var Pokemon;
 
+var cryAudio;
+var oldCryAudio;
+
 var imageRetried = false;
 document.addEventListener("DOMContentLoaded", () => {
     init();
@@ -196,6 +199,15 @@ async function init() {
         total += Pokemon.stats[index].base_stat;
     }
     document.getElementById("statTotal").innerText = "Total: " + total;
+
+    //cry panel
+    var cryPanel = document.getElementById("cryPanel");
+    cryAudio = new Audio(Pokemon.cries.latest);
+    oldCryAudio = new Audio(Pokemon.cries.legacy);
+    if (Pokemon.cries.legacy != null) {
+        document.getElementById("LegacyCry").addEventListener("click", () => { oldCryAudio.play(); });
+    } else { document.getElementById("LegacyCry").remove(); }
+    document.getElementById("LatestCry").addEventListener("click", () => { cryAudio.play(); });
 }
 function setStatBar(barId, value, max = 255) {
     const bar = document.getElementById(barId);

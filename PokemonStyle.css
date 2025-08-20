@@ -98,9 +98,10 @@
     color: white;
     width: auto;
 }
-.abilityText:hover {
-    transform: scale(1.05);
-}
+    .abilityText:hover {
+        transform: scale(1.05);
+        background-color: oldlace;
+    }
 #PokemonPortrait {
     width: 100%;
     margin: 0 auto;
@@ -136,3 +137,20 @@
     font-size: 12px;
     border-radius: 10px 0 0 10px;
 }
+.cryButton {
+    background-color: #2c2c63;
+    border: none;
+    color: white;
+    padding: 10px 24px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 12px;
+}
+    .cryButton:hover {
+        background-color: #39398f;
+        transform: scale(1.05);
+    }

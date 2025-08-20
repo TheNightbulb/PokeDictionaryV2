@@ -208,6 +208,23 @@ async function init() {
         document.getElementById("LegacyCry").addEventListener("click", () => { oldCryAudio.play(); });
     } else { document.getElementById("LegacyCry").remove(); }
     document.getElementById("LatestCry").addEventListener("click", () => { cryAudio.play(); });
+
+    //set gender ratio
+    var genderString = "";
+    if (PokemonSpiecies.gender_rate == -1) {
+        genderString = "Genderless";
+    } else {
+        const femalePercent = (PokemonSpiecies.gender_rate / 8) * 100;
+        const malePercent = 100 - femalePercent;
+        genderString = `${malePercent}% male, ${femalePercent}% female`;
+    }
+    document.getElementById("GenderRatioText").innerText = genderString;
+    //set egg groups
+    var eggText = document.getElementById("EggGroupText");
+    for (let index = 0; index < PokemonSpiecies.egg_groups.length; index++) {
+        eggText.innerText += (" "+FormatString(PokemonSpiecies.egg_groups[index].name)+",");
+    }
+    eggText.innerText = eggText.innerText.slice(0, -1);
 }
 function setStatBar(barId, value, max = 255) {
     const bar = document.getElementById(barId);

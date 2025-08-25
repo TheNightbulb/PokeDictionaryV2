@@ -350,53 +350,54 @@ function GetNationalPokedexNumber() {
 }
 
 async function setPrevNextPokemon(currentIdOrName) {
-    // 1. Fetch the current species info (safe sequential IDs)
-    const speciesRes = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${currentIdOrName}`);
-    const species = await speciesRes.json();
+    if (Pokemon.is_default === true) {
+        const speciesRes = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${currentIdOrName}`);
+        const species = await speciesRes.json();
 
-    const currentId = species.id;
+        const currentId = species.id;
 
-    // 2. Figure out prev/next species IDs
-    const prevId = currentId > 1 ? currentId - 1 : null;
-    const nextId = currentId < 1025 ? currentId + 1 : null; // adjust max dex as needed
+        const prevId = currentId > 1 ? currentId - 1 : null;
+        const nextId = currentId < 1025 ? currentId + 1 : null;
+        async function getPokemonData(id) {
+            if (!id) return null;
+            const res = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${id}`);
+            const data = await res.json();
+            const name = data.name;
 
-    // 3. Helper to get species + default pokemon data (for sprite + name)
-    async function getPokemonData(id) {
-        if (!id) return null;
-        const res = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${id}`);
-        const data = await res.json();
-        const name = data.name;
+            const pokeRes = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
+            const pokeData = await pokeRes.json();
 
-        // Get battle data to access sprites
-        const pokeRes = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
-        const pokeData = await pokeRes.json();
+            return {
+                name: name,
+                sprite: pokeData.sprites.front_default
+            };
+        }
 
-        return {
-            name: name,
-            sprite: pokeData.sprites.front_default
-        };
-    }
+        const [prev, next] = await Promise.all([
+            getPokemonData(prevId),
+            getPokemonData(nextId)
+        ]);
 
-    // 4. Fetch previous and next (in parallel)
-    const [prev, next] = await Promise.all([
-        getPokemonData(prevId),
-        getPokemonData(nextId)
-    ]);
+        if (prev) {
+            document.getElementById("lastPokemonName").textContent = " " + FormatString(prev.name);
+            document.getElementById("lastPokemon").src = prev.sprite;
+            document.getElementById("lastPokemonContainer").addEventListener("click", () => {
+                window.location.href = `pokemon.html?id=${prev.name}`;
+            });
+        } else {
+            document.getElementById("lastPokemonName").textContent = "";
+            document.getElementById("lastPokemon").src = "";
+        }
 
-    // 5. Update DOM
-    if (prev) {
-        document.getElementById("lastPokemonName").textContent = prev.name;
-        document.getElementById("lastPokemon").src = prev.sprite;
-    } else {
-        document.getElementById("lastPokemonName").textContent = "";
-        document.getElementById("lastPokemon").src = "";
-    }
-
-    if (next) {
-        document.getElementById("nextPokemonName").textContent = next.name;
-        document.getElementById("nextPokemon").src = next.sprite;
-    } else {
-        document.getElementById("nextPokemonName").textContent = "";
-        document.getElementById("nextPokemon").src = "";
+        if (next) {
+            document.getElementById("nextPokemonName").textContent = " " + FormatString(next.name);
+            document.getElementById("nextPokemon").src = next.sprite;
+            document.getElementById("nextPokemonContainer").addEventListener("click", () => {
+                window.location.href = `pokemon.html?id=${next.name}`;
+            });
+        } else {
+            document.getElementById("nextPokemonName").textContent = "";
+            document.getElementById("nextPokemon").src = "";
+        }
     }
 }

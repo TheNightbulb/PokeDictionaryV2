@@ -11,132 +11,142 @@
 
     <img id="bannerImage" src="https://raw.githubusercontent.com/TheNightbulb/PokeDictionaryV2/refs/heads/main/img/PokeDictionary%20Logo.png"/>
     <div class="SideBySide">
-        <div class="left-box">
-            <span><<<</span>
-            <span id="lastPokemonName"></span>
-            <img class="pokemonPreviewImage" id="lastPokemon"/>
-        </div>
-        <div class="right-box">
-            <img class="pokemonPreviewImage" id="nextPokemon" />
-            <span id="nextPokemonName"></span>
-            <span>>>></span>
-        </div>
-    </div>
-    <div id="PanelContainer">
-        <div class="Panel">
+        <div class="left-box" id="lastPokemonContainer">
             <div class="InnerPanel">
-                <span id="PokemonName">MissingNo</span>
-                <span id="PokemonGenus">MissingNo</span>
-                <span id="PokemonGeneration">MissingNo</span>
-
-            </div>
-            <img id="PokemonPortrait"/>
-        </div>
-        <div class="Panel" id="VirticalStacker">
-            <span class="TitleText">Pokédex Data</span>
-            <span class="text" id="PokedexNum">National #: </span>
-            <span class="text" id="typeText">Types</span>
-            <div id="TypeParent" class="HorizontalStacker">
-                <img id="TypeImg1" class="TypeImage" />
-                <img id="TypeImg2" class="TypeImage" />
-            </div>
-            <span class="text">Height</span>
-            <div class="InnerPanel" id="HeightMetricPanel">MissingNo</div>
-            <span class="text">Weight</span>
-            <div class="InnerPanel" id="WeightMetricPanel">MissingNo</div>
-            <span class="text">Abilities</span>
-            <div class="AbilityPanel" id="AbilityPanel"></div>
-            <span class="text">Local #</span>
-            <div class="AbilityPanel" id="PokedexNumbersPanel">
-
-            </div>
-            <span class="text">Cries</span>
-            <div class="HorizontalStacker">
-                <button class="cryButton" id="LatestCry">Latest</button>
-                <button class="cryButton" id="LegacyCry">Legacy</button>
-            </div>
-        </div>
-        <div class="Panel" id="BaseStatPanel">
-            <span class="TitleText">Base Stats</span>
-            <div class="stat-container">
                 <div class="HorizontalStacker">
-                    <span class="stat-label">HP</span>
-                    <div class="stat-bar">
-                        <div class="stat-fill" id="hp-bar"></div>
-                    </div>
-                </div>
-                <div class="HorizontalStacker">
-                    <span class="stat-label">Attack</span>
-                    <div class="stat-bar">
-                        <div class="stat-fill" id="attack-bar"></div>
-                    </div>
-                </div>
-                <div class="HorizontalStacker">
-                    <span class="stat-label">Defense</span>
-                    <div class="stat-bar">
-                        <div class="stat-fill" id="defense-bar"></div>
-                    </div>
-                </div>
-                <div class="HorizontalStacker">
-                    <span class="stat-label">Sp. Attack</span>
-                    <div class="stat-bar">
-                        <div class="stat-fill" id="spec-attack-bar"></div>
-                    </div>
-                </div>
-                <div class="HorizontalStacker">
-                    <span class="stat-label">Sp. Defense</span>
-                    <div class="stat-bar">
-                        <div class="stat-fill" id="spec-defense-bar"></div>
-                    </div>
-                </div>
-                <div class="HorizontalStacker">
-                    <span class="stat-label">Speed</span>
-                    <div class="stat-bar">
-                        <div class="stat-fill" id="speed-bar"></div>
-                    </div>
-                </div>
-                <div class="HorizontalStacker">
-                    <span class="stat-label" id="statTotal">000</span>
+                    <span><<<</span>
+                    <span id="lastPokemonName"></span>
+                    <img class="pokemonPreviewImage" id="lastPokemon" />
                 </div>
             </div>
         </div>
-        <div class="Panel">
-            <div id="VirticalStacker">
-                <span class="TitleText">Training and Breeding</span>
-                <span class="text">Egg Groups</span>
-                <div class="InnerPanel">
-                    <span id="EggGroupText"></span>
+        <div class="right-box" id="nextPokemonContainer">
+            <div class="InnerPanel">
+                <div class="HorizontalStacker">
+                    <img class="pokemonPreviewImage" id="nextPokemon" />
+                    <span id="nextPokemonName"></span>
+                    <span>>>></span>
+                    </div>
                 </div>
-                <span class="text">Gender Ratio</span>
-                <div class="InnerPanel">
-                    <span id="GenderRatioText"></span>
-                </div>
-                <span class="text">Egg Cycles</span>
-                <div class="InnerPanel">
-                    <span id="EggCycleText"></span>
-                </div>
-                <span class="text">Catch Rate</span>
-                <div class="InnerPanel">
-                    <span id="CatchRateText"></span>
-                </div>
-                <span class="text">Growth Rate</span>
-                <div class="InnerPanel">
-                    <span id="GrowthRateText"></span>
-                </div>
-                <span class="text">Base Friendship</span>
-                <div class="InnerPanel">
-                    <span id="BaseFriendshipText"></span>
                 </div>
             </div>
-        </div>
+            <div id="PanelContainer">
+                <div class="Panel">
+                    <div class="InnerPanel">
+                        <span id="PokemonName">MissingNo</span>
+                        <span id="PokemonGenus">MissingNo</span>
+                        <span id="PokemonGeneration">MissingNo</span>
+
+                    </div>
+                    <img id="PokemonPortrait" />
+                </div>
+                <div class="Panel" id="VirticalStacker">
+                    <span class="TitleText">Pokédex Data</span>
+                    <span class="text" id="PokedexNum">National #: </span>
+                    <span class="text" id="typeText">Types</span>
+                    <div id="TypeParent" class="HorizontalStacker">
+                        <img id="TypeImg1" class="TypeImage" />
+                        <img id="TypeImg2" class="TypeImage" />
+                    </div>
+                    <span class="text">Height</span>
+                    <div class="InnerPanel" id="HeightMetricPanel">MissingNo</div>
+                    <span class="text">Weight</span>
+                    <div class="InnerPanel" id="WeightMetricPanel">MissingNo</div>
+                    <span class="text">Abilities</span>
+                    <div class="AbilityPanel" id="AbilityPanel"></div>
+                    <span class="text">Local #</span>
+                    <div class="AbilityPanel" id="PokedexNumbersPanel">
+
+                    </div>
+                    <span class="text">Cries</span>
+                    <div class="HorizontalStacker">
+                        <button class="cryButton" id="LatestCry">Latest</button>
+                        <button class="cryButton" id="LegacyCry">Legacy</button>
+                    </div>
+                </div>
+                <div class="Panel" id="BaseStatPanel">
+                    <span class="TitleText">Base Stats</span>
+                    <div class="stat-container">
+                        <div class="HorizontalStacker">
+                            <span class="stat-label">HP</span>
+                            <div class="stat-bar">
+                                <div class="stat-fill" id="hp-bar"></div>
+                            </div>
+                        </div>
+                        <div class="HorizontalStacker">
+                            <span class="stat-label">Attack</span>
+                            <div class="stat-bar">
+                                <div class="stat-fill" id="attack-bar"></div>
+                            </div>
+                        </div>
+                        <div class="HorizontalStacker">
+                            <span class="stat-label">Defense</span>
+                            <div class="stat-bar">
+                                <div class="stat-fill" id="defense-bar"></div>
+                            </div>
+                        </div>
+                        <div class="HorizontalStacker">
+                            <span class="stat-label">Sp. Attack</span>
+                            <div class="stat-bar">
+                                <div class="stat-fill" id="spec-attack-bar"></div>
+                            </div>
+                        </div>
+                        <div class="HorizontalStacker">
+                            <span class="stat-label">Sp. Defense</span>
+                            <div class="stat-bar">
+                                <div class="stat-fill" id="spec-defense-bar"></div>
+                            </div>
+                        </div>
+                        <div class="HorizontalStacker">
+                            <span class="stat-label">Speed</span>
+                            <div class="stat-bar">
+                                <div class="stat-fill" id="speed-bar"></div>
+                            </div>
+                        </div>
+                        <div class="HorizontalStacker">
+                            <span class="stat-label" id="statTotal">000</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="Panel">
+                    <div id="VirticalStacker">
+                        <span class="TitleText">Training and Breeding</span>
+                        <span class="text">Egg Groups</span>
+                        <div class="InnerPanel">
+                            <span id="EggGroupText"></span>
+                        </div>
+                        <span class="text">Gender Ratio</span>
+                        <div class="InnerPanel">
+                            <span id="GenderRatioText"></span>
+                        </div>
+                        <span class="text">Egg Cycles</span>
+                        <div class="InnerPanel">
+                            <span id="EggCycleText"></span>
+                        </div>
+                        <span class="text">Catch Rate</span>
+                        <div class="InnerPanel">
+                            <span id="CatchRateText"></span>
+                        </div>
+                        <span class="text">Growth Rate</span>
+                        <div class="InnerPanel">
+                            <span id="GrowthRateText"></span>
+                        </div>
+                        <span class="text">Base Friendship</span>
+                        <div class="InnerPanel">
+                            <span id="BaseFriendshipText"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="Panel" id="movesPanel">
+                    <span class="TitleText">Moves</span>
+                </div>
+
+                <div class="Panel" id="PokedexEntryPanel">
+                    <span class="TitleText">Pokédex Entries</span>
 
 
-        <div class="Panel" id="PokedexEntryPanel">
-            <span class="TitleText">Pokédex Entries</span>
+                </div>
+            </div>
 
-            
-        </div>
-    </div>
-    
 </body>
 </html>

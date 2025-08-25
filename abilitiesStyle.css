@@ -46,6 +46,7 @@
     .HorizontalStacker {
         flex-direction: column;
         align-items: stretch; 
+        align-content: center;
     }
 
     .Panel {

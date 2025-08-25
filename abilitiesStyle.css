@@ -7,6 +7,11 @@
     align-items: center;
     text-align: center;
 }
+@media (max-width: 768px) {
+    .Panel {
+        width: 100%; /* one panel per row */
+    }
+}
 .TitleText {
     font-size: 300%;
     font-weight: bold;

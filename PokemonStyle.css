@@ -33,6 +33,7 @@
     align-items: center;
     text-align: center;
     color: white;
+    margin: 5px;
 }
 .Panel {
     border: 1px solid;

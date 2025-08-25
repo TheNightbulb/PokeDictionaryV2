@@ -241,6 +241,8 @@ async function init() {
     //set base friendship
     var baseFriendshipText = document.getElementById("BaseFriendshipText");
     baseFriendshipText.innerText = PokemonSpiecies.base_happiness;
+    //set moves tab
+    populateMovesTabs(Pokemon);
 }
 function setStatBar(barId, value, max = 255) {
     const bar = document.getElementById(barId);
@@ -348,7 +350,199 @@ function GetNationalPokedexNumber() {
 
     return national ? national.entry_number : null;
 }
+async function populateMovesTabs(pokemonData) {
+    var gamelist = [];
+    for (let index = 0; index < pokemonData.moves.length; index++) {
+        for (let index2 = 0; index2 < pokemonData.moves[index].version_group_details.length; index2++) {
+            var name = pokemonData.moves[index].version_group_details[index2].version_group.name
+            if (!contains(gamelist, name)) {
+                gamelist.push(name);
+            }
+        }
+    }
+    for (let index = 0; index < gamelist.length; index++) {
+        let button = document.createElement("button");
+        button.className = "tab-button";
+        button.innerText = FormatString(gamelist[index]);
+        button.addEventListener("click", () => {
+            document.querySelectorAll(".tab-button").forEach(btn => btn.classList.remove("active"));
+            button.classList.add("active");
 
+            document.querySelectorAll(".tab-content").forEach(tc => tc.classList.remove("active"));
+            tabContent.classList.add("active");
+        });
+        document.getElementById("movesTabs").appendChild(button);
+
+        let tabContent = document.createElement("div");
+        tabContent.id = `tab-${gamelist[index]}`;
+        tabContent.className = "tab-content";
+        document.getElementById("movesTabContents").appendChild(tabContent);
+        //set tab content
+
+        let moves = [];
+        let eggMoves = [];
+        let machineMoves = [];
+        let tutorMoves = [];
+        let formChangeMoves = []; 
+        for (let mindex = 0; mindex < pokemonData.moves.length; mindex++) {
+            let isInGame = false;
+            let learnMethod = "";
+            let levelLearnedAt = 0;
+            for (let vindex = 0; vindex < pokemonData.moves[mindex].version_group_details.length; vindex++) {
+                if (pokemonData.moves[mindex].version_group_details[vindex].version_group.name === gamelist[index]) {
+                    isInGame = true;
+                    learnMethod = pokemonData.moves[mindex].version_group_details[vindex].move_learn_method.name;
+                    levelLearnedAt = pokemonData.moves[mindex].version_group_details[vindex].level_learned_at;
+                }
+
+            }
+            if (isInGame) {
+                if (learnMethod === "level-up") {
+                    moves.push({
+                        name: pokemonData.moves[mindex].move.name,
+                        method: learnMethod,
+                        level: levelLearnedAt,
+                        index: mindex
+                    });
+                } else if (learnMethod === "egg") {
+                    eggMoves.push({
+                        name: pokemonData.moves[mindex].move.name,
+                        method: learnMethod,
+                        level: levelLearnedAt,
+                        index: mindex
+                    });
+                } else if (learnMethod === "machine") {
+                    machineMoves.push({
+                        name: pokemonData.moves[mindex].move.name,
+                        method: learnMethod,
+                        level: levelLearnedAt,
+                        index: mindex
+                    });
+                } else if (learnMethod === "tutor") {
+                    tutorMoves.push({
+                        name: pokemonData.moves[mindex].move.name,
+                        method: learnMethod,
+                        level: levelLearnedAt,
+                        index: mindex
+                    });
+                } else if (learnMethod === "form-change") {
+                    formChangeMoves.push({
+                        name: pokemonData.moves[mindex].move.name,
+                        method: learnMethod,
+                        level: levelLearnedAt,
+                        index: mindex
+                    });
+                }
+            }     
+            
+        }
+        
+        let LVspan = document.createElement("span");
+        LVspan.className = "TitleText";
+        LVspan.innerText = "Level Up";
+        tabContent.appendChild(LVspan);
+        let header = document.createElement("div");
+        header.className = "HorizontalMovesStacker header-row";
+
+        let levelLabel = document.createElement("span");
+        levelLabel.className = "header-text";
+        levelLabel.innerText = "Level";
+        header.appendChild(levelLabel);
+
+        let moveLabel = document.createElement("span");
+        moveLabel.className = "header-text";
+        moveLabel.innerText = "Move";
+        header.appendChild(moveLabel);
+
+        let typeLabel = document.createElement("span");
+        typeLabel.className = "header-text";
+        typeLabel.innerText = "Type";
+        header.appendChild(typeLabel);
+
+        let classLabel = document.createElement("span");
+        classLabel.className = "header-text";
+        classLabel.innerText = "Class";
+        header.appendChild(classLabel);
+
+        let powerLabel = document.createElement("span");
+        powerLabel.className = "header-text";
+        powerLabel.innerText = "Power";
+        header.appendChild(powerLabel);
+
+        let accuracyLabel = document.createElement("span");
+        accuracyLabel.className = "header-text";
+        accuracyLabel.innerText = "Accuracy";
+        header.appendChild(accuracyLabel);
+
+        tabContent.appendChild(header);
+
+        for (let LVindex = 0; LVindex < moves.length; LVindex++) {
+            let div = document.createElement("div");
+            div.className = "HorizontalMovesStacker";
+
+            let levelSpan = document.createElement("span");
+            levelSpan.className = "text";
+            levelSpan.innerText = moves[LVindex].level;
+            div.appendChild(levelSpan);
+
+            let moveName = document.createElement("span");
+            moveName.className = "text";
+            moveName.innerText = FormatString(moves[LVindex].name);
+            div.appendChild(moveName);
+
+
+            let damageTypeImg = document.createElement("img");
+            damageTypeImg.className = "moveTypeIcon";
+            let moveData = await fetch(pokemonData.moves[moves[LVindex].index].move.url);
+            let moveJson = await moveData.json();
+            damageTypeImg.src = await GetTypeSprites(moveJson.type.name);
+            div.appendChild(damageTypeImg);
+
+            let moveTypeImg = document.createElement("img");
+            moveTypeImg.className = "moveTypeIcon";
+            moveTypeImg.src = getMoveCategoryIcon(moveJson.damage_class.name);
+            div.appendChild(moveTypeImg);
+
+            let powerSpan = document.createElement("span");
+            powerSpan.className = "text";
+            powerSpan.innerText = moveJson.power ? moveJson.power : "-";
+            div.appendChild(powerSpan);
+
+            let accuracySpan = document.createElement("span");
+            accuracySpan.className = "text";
+            accuracySpan.innerText = moveJson.accuracy ? moveJson.accuracy : "-";
+            div.appendChild(accuracySpan);
+            tabContent.appendChild(div);
+        }
+        
+
+
+        
+        if (index === 0) {
+            button.classList.add("active");
+            tabContent.classList.add("active");
+        }
+    }
+    
+}
+function getMoveCategoryIcon(category) {
+    switch (category) {
+        case "physical":
+            return "https://raw.githubusercontent.com/TheNightbulb/PokeDictionaryV2/refs/heads/main/img/physical_move_icon.png";
+        case "special":
+            return "https://raw.githubusercontent.com/TheNightbulb/PokeDictionaryV2/refs/heads/main/img/special_move_icon.png";
+        case "status":
+            return "https://raw.githubusercontent.com/TheNightbulb/PokeDictionaryV2/refs/heads/main/img/status_move_icon.png";
+    }
+}
+function contains(a, obj) {
+    for (var i = 0; i < a.length; i++) {
+        if (a[i] === obj) {
+            return true;
+        }
+    }
+    return false;
+}
 async function setPrevNextPokemon(currentIdOrName) {
     if (Pokemon.is_default === true) {
         const speciesRes = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${currentIdOrName}`);

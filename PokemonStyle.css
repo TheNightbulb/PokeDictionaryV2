@@ -19,6 +19,23 @@
     width: 100%;
     flex: 1;
 }
+.SideBySide {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center; 
+    width: 100%;
+}
+
+.left-box, .right-box {
+    font-size: clamp(16px, 5vw, 40px);
+    flex: 0 0 auto;
+    padding: 10px;
+    color: white;
+    font-weight: bold;
+}
+.pokemonPreviewImage {
+    width: 20%;
+}
 .TypeImage {
     width: 48%;
     height:auto;

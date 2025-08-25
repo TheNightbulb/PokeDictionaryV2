@@ -35,6 +35,10 @@ async function init() {
     document.getElementById("PokemonPortrait").src = await GetArtworkURLForPokemon("official");
     document.getElementById("PokemonName").innerText = FormatString(PokemonName);
     document.getElementById("PokemonGenus").innerText = getEnglishEntries(PokemonSpiecies.genera, "genus")[0];
+    //set prev and next buttons
+    setPrevNextPokemon(PokemonName);
+
+
     //pokedex info
     var typeText;
     if (Pokemon.types.length == 1) {
@@ -343,4 +347,56 @@ function GetNationalPokedexNumber() {
     );
 
     return national ? national.entry_number : null;
+}
+
+async function setPrevNextPokemon(currentIdOrName) {
+    // 1. Fetch the current species info (safe sequential IDs)
+    const speciesRes = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${currentIdOrName}`);
+    const species = await speciesRes.json();
+
+    const currentId = species.id;
+
+    // 2. Figure out prev/next species IDs
+    const prevId = currentId > 1 ? currentId - 1 : null;
+    const nextId = currentId < 1025 ? currentId + 1 : null; // adjust max dex as needed
+
+    // 3. Helper to get species + default pokemon data (for sprite + name)
+    async function getPokemonData(id) {
+        if (!id) return null;
+        const res = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${id}`);
+        const data = await res.json();
+        const name = data.name;
+
+        // Get battle data to access sprites
+        const pokeRes = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
+        const pokeData = await pokeRes.json();
+
+        return {
+            name: name,
+            sprite: pokeData.sprites.front_default
+        };
+    }
+
+    // 4. Fetch previous and next (in parallel)
+    const [prev, next] = await Promise.all([
+        getPokemonData(prevId),
+        getPokemonData(nextId)
+    ]);
+
+    // 5. Update DOM
+    if (prev) {
+        document.getElementById("lastPokemonName").textContent = prev.name;
+        document.getElementById("lastPokemon").src = prev.sprite;
+    } else {
+        document.getElementById("lastPokemonName").textContent = "";
+        document.getElementById("lastPokemon").src = "";
+    }
+
+    if (next) {
+        document.getElementById("nextPokemonName").textContent = next.name;
+        document.getElementById("nextPokemon").src = next.sprite;
+    } else {
+        document.getElementById("nextPokemonName").textContent = "";
+        document.getElementById("nextPokemon").src = "";
+    }
 }

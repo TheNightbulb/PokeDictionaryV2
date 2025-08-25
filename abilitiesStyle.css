@@ -42,6 +42,17 @@
     flex: 1;
     margin:1%;
 }
+@media (max-width: 768px) {
+    .HorizontalStacker {
+        flex-direction: column;
+        align-items: stretch; 
+    }
+
+    .Panel {
+        width: 100%; 
+        margin: 10px 0; 
+    }
+}
 #bannerImage {
     width: 100%;
     height: auto;

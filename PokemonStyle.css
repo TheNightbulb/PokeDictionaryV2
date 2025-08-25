@@ -40,16 +40,16 @@
     border-radius: 30px;
     padding: 20px;
     background-color: #20204a;
-    width: 30%; /* multiple per row */
+    width: 30%; 
     align-items: center;
     text-align: center;
     color: white;
 }
 
-/* small screens (mobile) */
+ 
 @media (max-width: 768px) {
     .Panel {
-        width: 100%; /* one panel per row */
+        width: 100%; 
     }
 }
 .InnerPanel {

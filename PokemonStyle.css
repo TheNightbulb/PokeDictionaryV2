@@ -307,7 +307,7 @@
     }
 
 .moveTypeIcon {
-    height: 15px;
+    height: 25px;
     object-fit: contain;
     justify-self: center; 
 }

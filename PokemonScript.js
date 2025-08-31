@@ -419,11 +419,15 @@ async function populateMovesTabs(pokemonData) {
 
             // Column: Type
             let typeImg = document.createElement("img");
+            typeImg.style.height = "25px";
+            typeImg.style.width = "auto";
             typeImg.src = await GetMoveTypeSprites(moveJson.type.name);
             div.appendChild(typeImg);
 
             // Column: Class
             let classImg = document.createElement("img");
+            classImg.style.height = "25px";
+            classImg.style.width = "auto";
             classImg.src = getMoveCategoryIcon(moveJson.damage_class.name);
             div.appendChild(classImg);
 
@@ -494,11 +498,11 @@ async function populateMovesTabs(pokemonData) {
 function getMoveCategoryIcon(category) {
     switch (category) {
         case "physical":
-            return "https://raw.githubusercontent.com/TheNightbulb/PokeDictionaryV2/refs/heads/main/img/physical_move_icon.png";
+            return "https://raw.githubusercontent.com/TheNightbulb/PokeDictionaryV2/refs/heads/main/img/move-physical.png";
         case "special":
-            return "https://raw.githubusercontent.com/TheNightbulb/PokeDictionaryV2/refs/heads/main/img/special_move_icon.png";
+            return "https://raw.githubusercontent.com/TheNightbulb/PokeDictionaryV2/refs/heads/main/img/move-special.png";
         case "status":
-            return "https://raw.githubusercontent.com/TheNightbulb/PokeDictionaryV2/refs/heads/main/img/status_move_icon.png";
+            return "https://raw.githubusercontent.com/TheNightbulb/PokeDictionaryV2/refs/heads/main/img/move-status.png";
     }
 }
 function contains(a, obj) {

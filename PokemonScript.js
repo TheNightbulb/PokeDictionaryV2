@@ -296,6 +296,12 @@ async function GetTypeSprites(name) {
     var type = await TypeData.json();
     return "https://raw.githubusercontent.com/TheNightbulb/PokeDictionaryV2/refs/heads/main/img/Types/" + type.id+".png"
 }
+
+async function GetMoveTypeSprites(name) {
+    var TypeData = await fetch(`https://pokeapi.co/api/v2/type/${name}`);
+    var type = await TypeData.json();
+    return "https://raw.githubusercontent.com/TheNightbulb/PokeDictionaryV2/refs/heads/main/img/MoveTypes/" + type.id + ".png"
+}
 function convertHeight(dm, unit) {
     if (typeof dm !== "number" || isNaN(dm)) {
         throw new Error("First argument must be a number (decimeters).");
@@ -351,19 +357,110 @@ function GetNationalPokedexNumber() {
     return national ? national.entry_number : null;
 }
 async function populateMovesTabs(pokemonData) {
-    var gamelist = [];
-    for (let index = 0; index < pokemonData.moves.length; index++) {
-        for (let index2 = 0; index2 < pokemonData.moves[index].version_group_details.length; index2++) {
-            var name = pokemonData.moves[index].version_group_details[index2].version_group.name
-            if (!contains(gamelist, name)) {
-                gamelist.push(name);
-            }
+    // 1. Collect unique version groups
+    const gamelist = [...new Set(
+        pokemonData.moves.flatMap(m => m.version_group_details.map(v => v.version_group.name))
+    )];
+
+    // 2. Pre-fetch move details (only once per unique move)
+    const moveCache = new Map();
+    async function getMoveData(move) {
+        if (!moveCache.has(move.name)) {
+            const res = await fetch(move.url);
+            const data = await res.json();
+            moveCache.set(move.name, data);
+        }
+        return moveCache.get(move.name);
+    }
+
+    // 3. Helper to render a section of moves
+    async function renderMovesSection(title, moves, tabContent) {
+        if (!moves.length) return;
+
+        const titleEl = document.createElement("span");
+        titleEl.className = "TitleText";
+        titleEl.innerText = title;
+        tabContent.appendChild(titleEl);
+
+        // Header row
+        const header = document.createElement("div");
+        header.className = "HorizontalMovesStacker header-row";
+        ["Level", "Move", "Type", "Class", "Power", "Accuracy"].forEach(txt => {
+            let span = document.createElement("span");
+            span.className = "header-text";
+            span.innerText = txt;
+            header.appendChild(span);
+        });
+        tabContent.appendChild(header);
+
+        // Sort moves (level-up by level, others alphabetically)
+        if (title === "Level Up") {
+            moves.sort((a, b) => a.level - b.level);
+        } else {
+            moves.sort((a, b) => a.name.localeCompare(b.name));
+        }
+
+        // Render rows
+        for (const move of moves) {
+            const moveJson = await getMoveData(move);
+
+            const div = document.createElement("div");
+            div.className = "move-row"; // use grid styling
+
+            // Column: Level
+            let levelSpan = document.createElement("span");
+            levelSpan.innerText = move.level || "-";
+            div.appendChild(levelSpan);
+
+            // Column: Move Name
+            let moveName = document.createElement("span");
+            moveName.innerText = FormatString(move.name);
+            div.appendChild(moveName);
+
+            // Column: Type
+            let typeImg = document.createElement("img");
+            typeImg.src = await GetMoveTypeSprites(moveJson.type.name);
+            div.appendChild(typeImg);
+
+            // Column: Class
+            let classImg = document.createElement("img");
+            classImg.src = getMoveCategoryIcon(moveJson.damage_class.name);
+            div.appendChild(classImg);
+
+            // Column: Power
+            let power = document.createElement("span");
+            power.innerText = moveJson.power ?? "-";
+            div.appendChild(power);
+
+            // Column: Accuracy
+            let accuracy = document.createElement("span");
+            accuracy.innerText = moveJson.accuracy ?? "-";
+            div.appendChild(accuracy);
+
+            tabContent.appendChild(div);
         }
     }
-    for (let index = 0; index < gamelist.length; index++) {
-        let button = document.createElement("button");
+
+    // 4. Build the tabs
+    for (let [i, game] of gamelist.entries()) {
+        // Tab button
+        const button = document.createElement("button");
         button.className = "tab-button";
-        button.innerText = FormatString(gamelist[index]);
+        button.innerText = FormatString(game);
+        document.getElementById("movesTabs").appendChild(button);
+
+        // Tab content container
+        const tabContent = document.createElement("div");
+        tabContent.id = `tab-${game}`;
+        tabContent.className = "tab-content";
+        document.getElementById("movesTabContents").appendChild(tabContent);
+
+        // Activate first tab by default
+        if (i === 0) {
+            button.classList.add("active");
+            tabContent.classList.add("active");
+        }
+
         button.addEventListener("click", () => {
             document.querySelectorAll(".tab-button").forEach(btn => btn.classList.remove("active"));
             button.classList.add("active");
@@ -371,160 +468,29 @@ async function populateMovesTabs(pokemonData) {
             document.querySelectorAll(".tab-content").forEach(tc => tc.classList.remove("active"));
             tabContent.classList.add("active");
         });
-        document.getElementById("movesTabs").appendChild(button);
 
-        let tabContent = document.createElement("div");
-        tabContent.id = `tab-${gamelist[index]}`;
-        tabContent.className = "tab-content";
-        document.getElementById("movesTabContents").appendChild(tabContent);
-        //set tab content
+        // Group moves by learn method
+        const movesByMethod = { "level-up": [], "egg": [], "machine": [], "tutor": [], "form-change": [] };
 
-        let moves = [];
-        let eggMoves = [];
-        let machineMoves = [];
-        let tutorMoves = [];
-        let formChangeMoves = []; 
-        for (let mindex = 0; mindex < pokemonData.moves.length; mindex++) {
-            let isInGame = false;
-            let learnMethod = "";
-            let levelLearnedAt = 0;
-            for (let vindex = 0; vindex < pokemonData.moves[mindex].version_group_details.length; vindex++) {
-                if (pokemonData.moves[mindex].version_group_details[vindex].version_group.name === gamelist[index]) {
-                    isInGame = true;
-                    learnMethod = pokemonData.moves[mindex].version_group_details[vindex].move_learn_method.name;
-                    levelLearnedAt = pokemonData.moves[mindex].version_group_details[vindex].level_learned_at;
-                }
-
-            }
-            if (isInGame) {
-                if (learnMethod === "level-up") {
-                    moves.push({
-                        name: pokemonData.moves[mindex].move.name,
-                        method: learnMethod,
-                        level: levelLearnedAt,
-                        index: mindex
-                    });
-                } else if (learnMethod === "egg") {
-                    eggMoves.push({
-                        name: pokemonData.moves[mindex].move.name,
-                        method: learnMethod,
-                        level: levelLearnedAt,
-                        index: mindex
-                    });
-                } else if (learnMethod === "machine") {
-                    machineMoves.push({
-                        name: pokemonData.moves[mindex].move.name,
-                        method: learnMethod,
-                        level: levelLearnedAt,
-                        index: mindex
-                    });
-                } else if (learnMethod === "tutor") {
-                    tutorMoves.push({
-                        name: pokemonData.moves[mindex].move.name,
-                        method: learnMethod,
-                        level: levelLearnedAt,
-                        index: mindex
-                    });
-                } else if (learnMethod === "form-change") {
-                    formChangeMoves.push({
-                        name: pokemonData.moves[mindex].move.name,
-                        method: learnMethod,
-                        level: levelLearnedAt,
-                        index: mindex
-                    });
-                }
-            }     
-            
+        for (const m of pokemonData.moves) {
+            const vg = m.version_group_details.find(v => v.version_group.name === game);
+            if (!vg) continue;
+            movesByMethod[vg.move_learn_method.name]?.push({
+                name: m.move.name,
+                url: m.move.url,
+                level: vg.level_learned_at
+            });
         }
-        
-        let LVspan = document.createElement("span");
-        LVspan.className = "TitleText";
-        LVspan.innerText = "Level Up";
-        tabContent.appendChild(LVspan);
-        let header = document.createElement("div");
-        header.className = "HorizontalMovesStacker header-row";
 
-        let levelLabel = document.createElement("span");
-        levelLabel.className = "header-text";
-        levelLabel.innerText = "Level";
-        header.appendChild(levelLabel);
-
-        let moveLabel = document.createElement("span");
-        moveLabel.className = "header-text";
-        moveLabel.innerText = "Move";
-        header.appendChild(moveLabel);
-
-        let typeLabel = document.createElement("span");
-        typeLabel.className = "header-text";
-        typeLabel.innerText = "Type";
-        header.appendChild(typeLabel);
-
-        let classLabel = document.createElement("span");
-        classLabel.className = "header-text";
-        classLabel.innerText = "Class";
-        header.appendChild(classLabel);
-
-        let powerLabel = document.createElement("span");
-        powerLabel.className = "header-text";
-        powerLabel.innerText = "Power";
-        header.appendChild(powerLabel);
-
-        let accuracyLabel = document.createElement("span");
-        accuracyLabel.className = "header-text";
-        accuracyLabel.innerText = "Accuracy";
-        header.appendChild(accuracyLabel);
-
-        tabContent.appendChild(header);
-
-        for (let LVindex = 0; LVindex < moves.length; LVindex++) {
-            let div = document.createElement("div");
-            div.className = "HorizontalMovesStacker";
-
-            let levelSpan = document.createElement("span");
-            levelSpan.className = "text";
-            levelSpan.innerText = moves[LVindex].level;
-            div.appendChild(levelSpan);
-
-            let moveName = document.createElement("span");
-            moveName.className = "text";
-            moveName.innerText = FormatString(moves[LVindex].name);
-            div.appendChild(moveName);
-
-
-            let damageTypeImg = document.createElement("img");
-            damageTypeImg.className = "moveTypeIcon";
-            let moveData = await fetch(pokemonData.moves[moves[LVindex].index].move.url);
-            let moveJson = await moveData.json();
-            damageTypeImg.src = await GetTypeSprites(moveJson.type.name);
-            div.appendChild(damageTypeImg);
-
-            let moveTypeImg = document.createElement("img");
-            moveTypeImg.className = "moveTypeIcon";
-            moveTypeImg.src = getMoveCategoryIcon(moveJson.damage_class.name);
-            div.appendChild(moveTypeImg);
-
-            let powerSpan = document.createElement("span");
-            powerSpan.className = "text";
-            powerSpan.innerText = moveJson.power ? moveJson.power : "-";
-            div.appendChild(powerSpan);
-
-            let accuracySpan = document.createElement("span");
-            accuracySpan.className = "text";
-            accuracySpan.innerText = moveJson.accuracy ? moveJson.accuracy : "-";
-            div.appendChild(accuracySpan);
-            tabContent.appendChild(div);
-        }
-        
-
-
-        
-        if (index === 0) {
-            button.classList.add("active");
-            tabContent.classList.add("active");
-        }
+        // Render each section
+        await renderMovesSection("Level Up", movesByMethod["level-up"], tabContent);
+        await renderMovesSection("Egg Moves", movesByMethod["egg"], tabContent);
+        await renderMovesSection("Form Change", movesByMethod["form-change"], tabContent);
+        await renderMovesSection("Machine", movesByMethod["machine"], tabContent);
+        await renderMovesSection("Tutor", movesByMethod["tutor"], tabContent);
     }
-    
 }
+
 function getMoveCategoryIcon(category) {
     switch (category) {
         case "physical":

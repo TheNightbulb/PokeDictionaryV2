@@ -21,7 +21,7 @@
 }
 .HorizontalMovesStacker {
     display: grid;
-    grid-template-columns: auto auto 40px 40px auto auto; /* adjust sizes */
+    grid-template-columns: auto auto 40px 40px auto auto;
     gap: 8px;
     align-items: center;
     padding: 6px 10px;
@@ -30,6 +30,46 @@
     border: 2px solid #39398f;
     border-radius: 10px;
 }
+/* Applies to header + rows */
+.move-row, .header-row {
+    display: grid;
+    grid-template-columns: minmax(40px, 0.7fr) /* Level */
+    minmax(100px, 2fr) /* Move name */
+    minmax(40px, 1fr) /* Type */
+    minmax(40px, 1fr) /* Class */
+    minmax(50px, 1fr) /* Power */
+    minmax(60px, 1fr); /* Accuracy */
+    align-items: center;
+    gap: 8px;
+    padding: 6px 4px;
+}
+
+/* Style headers */
+.header-row {
+    font-weight: bold;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 4px;
+}
+
+/* Center type/class icons */
+.move-row img {
+    height: 20px;
+    width: 20px;
+    margin: 0 auto;
+    display: block;
+    object-fit: contain;
+}
+
+/* Text alignment */
+.move-row span,
+.header-row span {
+    text-align: center;
+}
+
+    .move-row span:nth-child(2),
+    .header-row span:nth-child(2) {
+        text-align: left; /* move names left aligned */
+    }
 .SideBySide {
     display: flex;
     justify-content: space-between;
